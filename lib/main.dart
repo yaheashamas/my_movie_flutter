@@ -9,7 +9,6 @@ import 'services/api.dart';
 void main() async {
   await GetStorage.init();
   Api.initializeInterceptors();
-
   runApp(MyApp());
 }
 

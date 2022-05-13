@@ -12,9 +12,14 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  #state mangment
   get: any
+  #local storage
   get_storage: any
+  #http
   dio: any
+  #for load image
+  transparent_image: ^2.0.0
 
 
 dev_dependencies:

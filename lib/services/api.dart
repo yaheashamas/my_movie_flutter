@@ -7,8 +7,6 @@ class Api {
     BaseOptions(
       baseUrl: 'http://192.168.1.110:8000/',
       receiveDataWhenStatusError: true,
-      connectTimeout: 5000,
-      receiveTimeout: 3000,
     ),
   );
 
@@ -57,5 +55,9 @@ class Api {
 
   static Future<Response> getGenres() async {
     return await dio.get('api/genres');
+  }
+
+  static Future<Response> getMovies(String type) async {
+    return await dio.post('api/movies', queryParameters: {'type': type});
   }
 }
