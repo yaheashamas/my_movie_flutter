@@ -9,10 +9,14 @@ class HomeController extends GetxController {
   var isLoadingPopular = true.obs;
 
   List<Movie> nowPlayingMovies = [];
+  List<Movie> upcomingMovies = [];
+  List<Movie> popularMovies = [];
 
   @override
   void onInit() async {
     getMoviesNowPlaying();
+    getMoviesUpcoming();
+    getMoviesPopular();
     super.onInit();
   }
 
@@ -20,10 +24,32 @@ class HomeController extends GetxController {
     isLoadingNowPlaying.value = true;
     nowPlayingMovies.clear();
 
-    var response = await Api.getMovies('now_playing');
+    var response = await Api.getMovies(type: 'now_playing');
     var moviesResponse = MoviesResponse.fromJson(response.data);
 
     nowPlayingMovies.addAll(moviesResponse.movies);
     isLoadingNowPlaying.value = false;
+  }
+
+  Future getMoviesUpcoming() async {
+    isLoadingUpComing.value = true;
+    upcomingMovies.clear();
+
+    var response = await Api.getMovies(type: 'upcoming');
+    var moviesResponse = MoviesResponse.fromJson(response.data);
+
+    upcomingMovies.addAll(moviesResponse.movies);
+    isLoadingUpComing.value = false;
+  }
+
+  Future getMoviesPopular() async {
+    isLoadingPopular.value = true;
+    popularMovies.clear();
+
+    var response = await Api.getMovies(type: 'popular');
+    var moviesResponse = MoviesResponse.fromJson(response.data);
+
+    popularMovies.addAll(moviesResponse.movies);
+    isLoadingPopular.value = false;
   }
 }

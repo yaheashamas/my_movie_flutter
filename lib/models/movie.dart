@@ -15,7 +15,7 @@ class Movie {
   Movie.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     vote = json['vote'].toDouble();
-    type = json['type'];
+    type = json['type'] ?? '';
     title = json['title'];
     poster = json['poster'];
     banner = json['banner'];

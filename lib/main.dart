@@ -19,38 +19,40 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.blue,
-            statusBarBrightness: Brightness.light,
-          ),
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Colors.amber,
-          secondary: Colors.amber,
-        ),
-      ),
+      // theme: ThemeData(
+      //   appBarTheme: AppBarTheme(
+      //     systemOverlayStyle: SystemUiOverlayStyle(
+      //       statusBarColor: Colors.blue,
+      //       statusBarBrightness: Brightness.light,
+      //     ),
+      //     titleTextStyle: TextStyle(
+      //       color: Colors.white,
+      //       fontSize: 20,
+      //     ),
+      //   ),
+      //   colorScheme: ColorScheme.fromSwatch().copyWith(
+      //     primary: Colors.amber,
+      //     secondary: Colors.amber,
+      //   ),
+      // ),
       darkTheme: ThemeData(
         appBarTheme: AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.blue,
+            statusBarColor: Colors.black,
             statusBarBrightness: Brightness.light,
           ),
+          backgroundColor: Colors.black,
+          centerTitle: true,
           titleTextStyle: TextStyle(
             color: Colors.white,
             fontSize: 20,
           ),
+          iconTheme: IconThemeData(color: Colors.white),
         ),
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Colors.amber,
-          secondary: Colors.amber,
-          brightness: Brightness.dark
-        ),
+            primary: Colors.amber,
+            secondary: Colors.amber,
+            brightness: Brightness.dark),
       ),
       locale: Locale('en'),
       fallbackLocale: Locale('en'),

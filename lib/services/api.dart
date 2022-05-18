@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart' as GET;
+import 'package:movies/responses/movies_response.dart';
 
 class Api {
   static final dio = Dio(
     BaseOptions(
-      baseUrl: 'http://192.168.1.110:8000/',
+      baseUrl: 'http://192.168.1.110:7000/',
       receiveDataWhenStatusError: true,
     ),
   );
@@ -57,7 +58,14 @@ class Api {
     return await dio.get('api/genres');
   }
 
-  static Future<Response> getMovies(String type) async {
-    return await dio.post('api/movies', queryParameters: {'type': type});
+  static Future<Response> getMovies({
+    int page = 1,
+    String? type,
+    int? genre,
+  }) async {
+    return await dio.post(
+      'api/movies',
+      queryParameters: {'type': type, 'genre_id': genre, 'page': page},
+    );
   }
 }
