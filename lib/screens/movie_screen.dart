@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:movies/controllers/movie_controller.dart';
-import 'package:movies/models/movie.dart';
 import 'package:transparent_image/transparent_image.dart';
+
+import '../controllers/movie_controller.dart';
+import '../models/movie.dart';
 
 class MovieScreen extends StatefulWidget {
   int? genreId;
@@ -21,10 +21,30 @@ class MovieScreen extends StatefulWidget {
 
 class _MovieScreenState extends State<MovieScreen> {
   var movieController = Get.put(MovieController());
+  final scrollController = ScrollController();
 
   @override
   void initState() {
     movieController.getAllMovies(genresId: widget.genreId, type: widget.type);
+
+    scrollController.addListener(() {
+      var sControllerOffset = scrollController.offset;
+      var sControllerMax = scrollController.position.maxScrollExtent - 100;
+      var isLoadingPagination = movieController.isLoadingPagination.value;
+      var hasMorePage = movieController.currentPage.value <
+          movieController.currentLastPage.value;
+      if (sControllerOffset > sControllerMax &&
+          isLoadingPagination == false &&
+          hasMorePage) {
+        movieController.isLoadingPagination.value = true;
+        movieController.currentPage.value++;
+        movieController.getAllMovies(
+          idPage: movieController.currentPage.value,
+          genresId: widget.genreId,
+          type: widget.type,
+        );
+      }
+    });
     super.initState();
   }
 
@@ -40,16 +60,35 @@ class _MovieScreenState extends State<MovieScreen> {
                 child: CircularProgressIndicator(),
               )
             : SingleChildScrollView(
+                controller: scrollController,
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: ListView.separated(
-                    scrollDirection: Axis.vertical,
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) =>
-                        buildMovieItem(movieController.movies[index]),
-                    separatorBuilder: (context, index) => SizedBox(height: 15),
-                    itemCount: movieController.movies.length,
+                  child: Column(
+                    children: [
+                      ListView.separated(
+                        scrollDirection: Axis.vertical,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) =>
+                            buildMovieItem(movieController.movies[index]),
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 15),
+                        itemCount: movieController.movies.length,
+                      ),
+                      Visibility(
+                        visible: movieController.isLoadingPagination.value,
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

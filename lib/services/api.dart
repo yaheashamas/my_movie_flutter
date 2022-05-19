@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart' as GET;
-import 'package:movies/responses/movies_response.dart';
 
 class Api {
   static final dio = Dio(
