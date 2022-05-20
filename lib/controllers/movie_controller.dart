@@ -15,6 +15,12 @@ class MovieController extends GetxController {
     String? type,
     int? genresId,
   }) async {
+    if (idPage == 1) {
+      isLoading.value = true;
+      currentPage.value = 1;
+      movies.clear();
+    }
+    
     var result = await Api.getMovies(
       page: idPage,
       type: type,
@@ -22,8 +28,6 @@ class MovieController extends GetxController {
     );
     var response = MoviesResponse.fromJson(result.data);
 
-    if (idPage == 1) movies.clear();
-    
     movies.addAll(response.movies);
     currentLastPage.value = response.lastPage;
 

@@ -5,7 +5,7 @@ import 'package:get/get.dart' as GET;
 class Api {
   static final dio = Dio(
     BaseOptions(
-      baseUrl: 'http://192.168.1.110:7000/',
+      baseUrl: 'http://51.75.52.119/~mymovies/public/',
       receiveDataWhenStatusError: true,
     ),
   );
