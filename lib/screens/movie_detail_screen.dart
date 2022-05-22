@@ -1,12 +1,28 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:movies/controllers/movie_controller.dart';
 import 'package:movies/models/movie.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-class MovieDetailScreen extends StatelessWidget {
+// ignore: must_be_immutable
+class MovieDetailScreen extends StatefulWidget {
   Movie movie;
+
   MovieDetailScreen({required this.movie, Key? key}) : super(key: key);
+
+  @override
+  State<MovieDetailScreen> createState() => _MovieDetailScreenState();
+}
+
+class _MovieDetailScreenState extends State<MovieDetailScreen> {
+  var movieController = Get.find<MovieController>();
+
+  @override
+  void initState() {
+    movieController.getAllActors(IdMovie: widget.movie.id);
+    movieController.getAllRelatedMovie(IdMovie: widget.movie.id);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +35,24 @@ class MovieDetailScreen extends StatelessWidget {
               pinned: true,
               expandedHeight: 250,
               flexibleSpace: FlexibleSpaceBar(
-                background: buildTopBanner(movie: movie),
+                background: buildTopBanner(movie: widget.movie),
               ),
             ),
-            SliverToBoxAdapter(
-              child: buildDetails(movie: movie),
-            ),
+            Obx(
+              () {
+                return SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        buildDetails(movie: widget.movie),
+                        buildRelatedMovie(relatedMovie: movieController)
+                      ],
+                    ),
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),
@@ -104,64 +132,233 @@ class MovieDetailScreen extends StatelessWidget {
   }
 
   Widget buildDetails({required Movie movie}) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Details",
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Details",
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(
+          "${movie.description}",
+          style: TextStyle(fontSize: 20, color: Colors.grey[400]),
+        ),
+        SizedBox(height: 20),
+        Row(
+          children: [
+            Container(
+              width: 200,
+              child: Text(
+                "Release Data:",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
+            Text(
+              "${movie.releaseDate}",
+              style: TextStyle(fontSize: 20, color: Colors.grey[400]),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: [
+            Container(
+              width: 200,
+              child: Text(
+                "Vote Count:",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Text(
+              "${movie.voteCount}",
+              style: TextStyle(fontSize: 20, color: Colors.grey[400]),
+            ),
+          ],
+        ),
+        SizedBox(height: 20),
+        Text(
+          "Actor",
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
           ),
-          SizedBox(height: 10),
-          Text(
-            "${movie.description}",
-            style: TextStyle(fontSize: 20, color: Colors.grey[400]),
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Container(
-                width: 200,
-                child: Text(
-                  "Release Data:",
+        ),
+        SizedBox(height: 10),
+        buildActors(actorController: movieController)
+      ],
+    );
+  }
+
+  Widget buildActors({required MovieController actorController}) {
+    return Container(
+      height: 245,
+      child: actorController.isLoadingActor.value
+          ? Center(child: CircularProgressIndicator())
+          : ListView.separated(
+              scrollDirection: Axis.horizontal,
+              physics: BouncingScrollPhysics(),
+              itemBuilder: (context, index) => Column(
+                children: [
+                  Container(
+                    height: 230,
+                    width: 150,
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        FadeInImage.memoryNetwork(
+                          placeholder: kTransparentImage,
+                          image: "${actorController.actors[index].image}",
+                          fit: BoxFit.cover,
+                          height: double.infinity,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text("${actorController.actors[index].name}"),
+                ],
+              ),
+              separatorBuilder: (context, index) => SizedBox(width: 10),
+              itemCount: actorController.actors.length,
+            ),
+    );
+  }
+
+  Widget buildRelatedMovie({required MovieController relatedMovie}) {
+    return Container(
+      height: 240,
+      child: relatedMovie.isLoadingRelatedMovie.value
+          ? Center(child: CircularProgressIndicator())
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20),
+                Text(
+                  "Related Movie",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 27,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              Text(
-                "${movie.releaseDate}",
-                style: TextStyle(fontSize: 20, color: Colors.grey[400]),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            children: [
-              Container(
-                width: 200,
-                child: Text(
-                  "Vote Count:",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                SizedBox(height: 10),
+                Container(
+                  height: 180,
+                  child: ListView.separated(
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) => Container(
+                      width: 300,
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 200,
+                            width: 130,
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                FadeInImage.memoryNetwork(
+                                  placeholder: kTransparentImage,
+                                  image:
+                                      '${relatedMovie.relatedMovie[index].poster}',
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        "${relatedMovie.relatedMovie[index].title}",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Chip(
+                                      padding: EdgeInsets.all(0),
+                                      backgroundColor: Colors.amber,
+                                      label: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.star,
+                                            color: Colors.black,
+                                          ),
+                                          Text(
+                                            "${relatedMovie.relatedMovie[index].vote}",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.black),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "${relatedMovie.relatedMovie[index].description}",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.grey[400],
+                                  ),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 10),
+                                Wrap(
+                                  children: [
+                                    ...relatedMovie.relatedMovie[index].genres
+                                        .take(2)
+                                        .map(
+                                          (genre) => Chip(
+                                            label: Text("${genre.name}"),
+                                          ),
+                                        )
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    separatorBuilder: (context, index) => SizedBox(width: 10),
+                    itemCount: relatedMovie.relatedMovie.length,
                   ),
                 ),
-              ),
-              Text(
-                "${movie.voteCount}",
-                style: TextStyle(fontSize: 20, color: Colors.grey[400]),
-              ),
-            ],
-          ),
-        ],
-      ),
+              ],
+            ),
     );
   }
 }

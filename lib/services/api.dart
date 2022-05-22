@@ -38,7 +38,6 @@ class Api {
           if (GET.Get.isDialogOpen == true) {
             GET.Get.back();
           }
-
           GET.Get.snackbar(
             'error'.tr,
             '${error.message}',
@@ -46,7 +45,6 @@ class Api {
             // backgroundColor: Colors.red,
             // colorText: Colors.white,
           );
-
           return handler.next(error); //continue
         },
       ),
@@ -66,5 +64,13 @@ class Api {
       'api/movies',
       queryParameters: {'type': type, 'genre_id': genre, 'page': page},
     );
+  }
+
+  static Future<Response> getActors({required int movieId}) async {
+    return await dio.get('api/movie/${movieId}/actors');
+  }
+
+  static Future<Response> getRelatedMovie({required int movieId}) async {
+    return await dio.get('api/movie/${movieId}/relatedMovie');
   }
 }
