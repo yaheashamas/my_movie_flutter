@@ -24,6 +24,7 @@ class MovieController extends GetxController {
     int idPage = 1,
     String? type,
     int? genresId,
+    int? actor_id,
   }) async {
     if (idPage == 1) {
       isLoading.value = true;
@@ -35,6 +36,7 @@ class MovieController extends GetxController {
       page: idPage,
       type: type,
       genre: genresId,
+      actor_id: actor_id,
     );
     var response = MoviesResponse.fromJson(result.data);
 

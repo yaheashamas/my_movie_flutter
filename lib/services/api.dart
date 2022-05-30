@@ -59,10 +59,16 @@ class Api {
     int page = 1,
     String? type,
     int? genre,
+    int? actor_id,
   }) async {
     return await dio.post(
       'api/movies',
-      queryParameters: {'type': type, 'genre_id': genre, 'page': page},
+      queryParameters: {
+        'type': type,
+        'genre_id': genre,
+        'page': page,
+        'actor_id': actor_id,
+      },
     );
   }
 

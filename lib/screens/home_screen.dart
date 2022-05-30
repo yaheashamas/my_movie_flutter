@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movies/controllers/home_controller.dart';
 import 'package:movies/models/movie.dart';
+import 'package:movies/screens/movie_detail_screen.dart';
 import 'package:movies/screens/movie_screen.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -97,55 +98,60 @@ class sliderWidgetNowPlaying extends StatelessWidget {
               : ListView.separated(
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => Container(
-                    width: 300,
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 250,
-                            width: double.infinity,
-                            child: Stack(
-                              children: [
-                                Center(child: CircularProgressIndicator()),
-                                FadeInImage.memoryNetwork(
-                                  placeholder: kTransparentImage,
-                                  image: '${movies[index].banner}',
-                                  height: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "${movies[index].title}",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                  itemBuilder: (context, index) => InkWell(
+                    child: Container(
+                      width: 300,
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 250,
+                              width: double.infinity,
+                              child: Stack(
+                                children: [
+                                  Center(child: CircularProgressIndicator()),
+                                  FadeInImage.memoryNetwork(
+                                    placeholder: kTransparentImage,
+                                    image: '${movies[index].banner}',
+                                    height: double.infinity,
+                                    fit: BoxFit.cover,
                                   ),
-                                ),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    ),
-                                    Text("${movies[index].vote}")
-                                  ],
-                                )
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "${movies[index].title}",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                      Text("${movies[index].vote}")
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
+                    onTap: () {
+                      Get.to(MovieDetailScreen(movie: movies[index]));
+                    },
                   ),
                   separatorBuilder: (context, index) => SizedBox(width: 10),
                   itemCount: movies.length,
@@ -204,35 +210,40 @@ class sliderWidgetPopular extends StatelessWidget {
               : ListView.separated(
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => Container(
-                    width: 150,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 200,
-                          width: double.infinity,
-                          child: Stack(
-                            children: [
-                              Center(child: CircularProgressIndicator()),
-                              FadeInImage.memoryNetwork(
-                                placeholder: kTransparentImage,
-                                image: '${movies[index].poster}',
-                                height: double.infinity,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                            ],
+                  itemBuilder: (context, index) => InkWell(
+                    child: Container(
+                      width: 150,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 200,
+                            width: double.infinity,
+                            child: Stack(
+                              children: [
+                                Center(child: CircularProgressIndicator()),
+                                FadeInImage.memoryNetwork(
+                                  placeholder: kTransparentImage,
+                                  image: '${movies[index].poster}',
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "${movies[index].title}",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                          SizedBox(height: 10),
+                          Text(
+                            "${movies[index].title}",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                     ),
+                    onTap: () {
+                      Get.to(MovieDetailScreen(movie: movies[index]));
+                    },
                   ),
                   separatorBuilder: (context, index) => SizedBox(width: 10),
                   itemCount: movies.length,
@@ -291,35 +302,40 @@ class sliderWidgetUpComing extends StatelessWidget {
               : ListView.separated(
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => Container(
-                    width: 150,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 200,
-                          width: double.infinity,
-                          child: Stack(
-                            children: [
-                              Center(child: CircularProgressIndicator()),
-                              FadeInImage.memoryNetwork(
-                                placeholder: kTransparentImage,
-                                image: '${movies[index].poster}',
-                                height: double.infinity,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                            ],
+                  itemBuilder: (context, index) => InkWell(
+                    child: Container(
+                      width: 150,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 200,
+                            width: double.infinity,
+                            child: Stack(
+                              children: [
+                                Center(child: CircularProgressIndicator()),
+                                FadeInImage.memoryNetwork(
+                                  placeholder: kTransparentImage,
+                                  image: '${movies[index].poster}',
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "${movies[index].title}",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                          SizedBox(height: 10),
+                          Text(
+                            "${movies[index].title}",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                     ),
+                    onTap: () {
+                      Get.to(MovieDetailScreen(movie: movies[index]));
+                    },
                   ),
                   separatorBuilder: (context, index) => SizedBox(width: 10),
                   itemCount: movies.length,

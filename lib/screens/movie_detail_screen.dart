@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movies/controllers/movie_controller.dart';
 import 'package:movies/models/movie.dart';
+import 'package:movies/screens/actor_screen.dart';
+import 'package:movies/widgets/custom_Image.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 // ignore: must_be_immutable
@@ -202,33 +204,29 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   Widget buildActors({required MovieController actorController}) {
     return Container(
-      height: 245,
+      height: 250,
       child: actorController.isLoadingActor.value
           ? Center(child: CircularProgressIndicator())
           : ListView.separated(
               scrollDirection: Axis.horizontal,
               physics: BouncingScrollPhysics(),
-              itemBuilder: (context, index) => Column(
-                children: [
-                  Container(
-                    height: 230,
-                    width: 150,
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        FadeInImage.memoryNetwork(
-                          placeholder: kTransparentImage,
-                          image: "${actorController.actors[index].image}",
-                          fit: BoxFit.cover,
-                          height: double.infinity,
-                        ),
-                      ],
+              itemBuilder: (context, index) => InkWell(
+                child: Column(
+                  children: [
+                    Container(
+                      height: 230,
+                      width: 150,
+                      child: CustomImage(
+                          Image: actorController.actors[index].image),
                     ),
-                  ),
-                  Text("${actorController.actors[index].name}"),
-                ],
+                    Text("${actorController.actors[index].name}"),
+                  ],
+                ),
+                onTap: () {
+                  Get.to(ActorScreen(
+                    actor: actorController.actors[index],
+                  ));
+                },
               ),
               separatorBuilder: (context, index) => SizedBox(width: 10),
               itemCount: actorController.actors.length,
@@ -238,7 +236,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   Widget buildRelatedMovie({required MovieController relatedMovie}) {
     return Container(
-      height: 240,
+      height: 260,
       child: relatedMovie.isLoadingRelatedMovie.value
           ? Center(child: CircularProgressIndicator())
           : Column(
@@ -254,13 +252,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 ),
                 SizedBox(height: 10),
                 Container(
-                  height: 180,
+                  height: 190,
                   child: ListView.separated(
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) => Container(
-                      width: 300,
+                      width: 350,
                       child: Row(
                         children: [
                           Container(
@@ -354,7 +352,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       ),
                     ),
                     separatorBuilder: (context, index) => SizedBox(width: 10),
-                    itemCount: relatedMovie.relatedMovie.length,
+                    itemCount: relatedMovie.relatedMovie.length ~/ 2,
                   ),
                 ),
               ],
