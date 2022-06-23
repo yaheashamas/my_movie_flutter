@@ -34,10 +34,15 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           slivers: <Widget>[
             SliverAppBar(
               floating: true,
+              stretch: true,
               pinned: true,
               expandedHeight: 250,
               flexibleSpace: FlexibleSpaceBar(
                 background: buildTopBanner(movie: widget.movie),
+                stretchModes: [
+                  StretchMode.zoomBackground,
+                  StretchMode.fadeTitle
+                ],
               ),
             ),
             Obx(

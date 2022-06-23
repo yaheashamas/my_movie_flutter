@@ -6,9 +6,10 @@ import 'package:movies/screens/welcome_screen.dart';
 class AuthController extends GetxController {
   final genreController = Get.put(GenreController());
   var isLogIn = false.obs;
+  var obscureText = true.obs;
 
   @override
-  void onInit() async{
+  void onInit() async {
     await genreController.getAllGenres();
     redirect();
     super.onInit();
@@ -23,5 +24,9 @@ class AuthController extends GetxController {
     Future.delayed(Duration(seconds: 3), () {
       Get.off(WelcomeScreen(), preventDuplicates: false);
     });
+  }
+
+  changeScurIcon() {
+    obscureText.value = !obscureText.value;
   }
 }
